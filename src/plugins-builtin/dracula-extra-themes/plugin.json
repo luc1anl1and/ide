@@ -1,0 +1,17 @@
+{
+  "id": "dracula-extra-themes",
+  "name": "Dracula Extra Themes",
+  "version": "1.0.0",
+  "description": "Two extra colour themes: Dracula Soft (dark) and Alucard (light). No code - themes are plain JSON.",
+  "author": "Reva",
+  "icon": "palette",
+  "reva": ">=0.3.0",
+  "activation": ["onStartup"],
+  "permissions": [],
+  "contributes": {
+    "themes": [
+      { "id": "dracula-soft", "name": "Dracula Soft", "file": "themes/dracula-soft.json" },
+      { "id": "alucard", "name": "Alucard Light", "file": "themes/alucard.json" }
+    ]
+  }
+}

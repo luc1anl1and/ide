@@ -1,0 +1,12 @@
+{
+  "name": "Alucard Light",
+  "dark": false,
+  "v": {
+    "bg": "#fffbeb", "bg1": "#f7f1db", "bg2": "#eee6c8", "bg3": "#e2d9b7", "border": "#d8cfa9",
+    "fg": "#1f1f1f", "fg2": "#4d4a3c", "fg3": "#8a8566", "accent": "#644ac9", "accent2": "#a3144d"
+  },
+  "t": {
+    "keyword": "a3144d", "string": "846e15", "number": "644ac9", "comment": "8a8566",
+    "type": "036a96", "func": "14710a", "variable": "1f1f1f", "operator": "a3144d"
+  }
+}

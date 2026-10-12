@@ -1,0 +1,91 @@
+/* Browser preview pane (browser.js). Uses the app theme variables. */
+.bp { display: flex; flex-direction: column; width: 100%; height: 100%; min-width: 0; min-height: 0; background: var(--bg); color: var(--fg); outline: none; container-type: inline-size; position: relative; }
+.bp.dragging webview, .bp.dragging .bp-wv { pointer-events: none; }
+.bp .hidden { display: none !important; }
+.bp-ic { width: 15px; height: 15px; display: block; }
+
+/* toolbar */
+.bp-bar { flex: none; display: flex; align-items: center; gap: 2px; padding: 6px 8px; background: var(--bg1); border-bottom: 1px solid var(--hair); }
+.bp-btn:disabled { opacity: .35; pointer-events: none; }
+.bp-btn.on { background: var(--bg3); color: var(--fg); }
+.bp-live.on { color: var(--fg); }
+.bp-urlbox { flex: 1; min-width: 80px; height: 28px; margin: 0 6px; display: flex; align-items: center; gap: 7px; padding: 0 10px; background: var(--bg); border: 1px solid var(--hair); border-radius: 9px; }
+.bp-urlbox:focus-within { border-color: var(--fg3); }
+.bp-lock { display: grid; place-items: center; color: var(--fg3); flex: none; }
+.bp-lock.secure { color: var(--fg2); }
+.bp-lock.insecure { color: var(--warn); }
+.bp-spin { margin: 0 2px; }
+.bp-url { flex: 1; min-width: 0; height: 100%; border: 0; outline: none; background: transparent; color: var(--fg); font-size: 12.5px; user-select: text; }
+.bp-url::placeholder { color: var(--fg3); }
+.bp-zoom { display: flex; align-items: center; margin-left: 2px; }
+.bp-zoomlbl { height: 24px; min-width: 42px; padding: 0 4px; border: 0; background: transparent; color: var(--fg2); border-radius: 7px; font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.bp-zoomlbl:hover { background: var(--bg2); color: var(--fg); }
+.bp-err-btn { height: 24px; display: inline-flex; align-items: center; gap: 5px; padding: 0 8px; margin: 0 2px; border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); background: color-mix(in srgb, var(--bad) 12%, transparent); color: var(--bad); border-radius: 8px; font-size: 11.5px; font-weight: 600; }
+.bp-err-btn:hover { background: color-mix(in srgb, var(--bad) 20%, transparent); }
+.bp-err-btn svg { width: 13px; height: 13px; }
+@container (max-width: 620px) { .bp-zoom .bp-btn { display: none; } }
+@container (max-width: 480px) { .bp-zoom, .bp-live { display: none; } }
+
+/* device row */
+.bp-devbar { flex: none; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 4px 10px; background: var(--bg1); border-bottom: 1px solid var(--hair); color: var(--fg2); font-size: 12px; }
+.bp-devname { font-weight: 600; color: var(--fg); margin-right: 4px; }
+.bp-dim { width: 62px; height: 24px; text-align: center; background: var(--bg); border: 1px solid var(--hair); border-radius: 7px; outline: none; color: var(--fg); font-size: 12px; -moz-appearance: textfield; }
+.bp-dim:focus { border-color: var(--fg3); }
+.bp-dim::-webkit-inner-spin-button { display: none; }
+.bp-x { color: var(--fg3); }
+.bp-devscale { color: var(--fg3); font-size: 11.5px; min-width: 52px; }
+
+/* body: page + docked devtools */
+.bp-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.bp-body.dev-right { flex-direction: row; }
+.bp-stage { flex: 1; min-width: 0; min-height: 0; position: relative; overflow: hidden; background: var(--bg); }
+.bp-frame { position: absolute; inset: 0; background: #fff; overflow: hidden; }
+.bp-frame.device { inset: auto; border-radius: 12px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--fg) 16%, transparent), 0 14px 40px rgba(0, 0, 0, .35); transform-origin: 0 0; }
+.bp-stage:has(.bp-frame.device) { background: var(--bg1); background-image: radial-gradient(color-mix(in srgb, var(--fg) 7%, transparent) 1px, transparent 1px); background-size: 16px 16px; }
+.bp-wv { display: inline-flex; width: 100%; height: 100%; border: 0; background: #fff; }
+.bp-wv-hidden { visibility: hidden; }
+
+/* start + error views */
+.bp-start, .bp-errview { position: absolute; inset: 0; overflow: auto; background: var(--bg); display: grid; place-items: center; padding: 24px; z-index: 2; }
+.bp-start-in { width: min(560px, 100%); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+.bp-start-ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--bg2); color: var(--fg2); margin-bottom: 6px; }
+.bp-start-ico svg { width: 22px; height: 22px; }
+.bp-start-ico.warn { color: var(--warn); }
+.bp-start-h { font-size: 17px; font-weight: 650; }
+.bp-start-p { color: var(--fg2); font-size: 13px; max-width: 420px; }
+.bp-url-chip { margin-top: 6px; padding: 3px 10px; border-radius: 8px; background: var(--bg1); border: 1px solid var(--hair); color: var(--fg2); font: 12px var(--mono); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; user-select: text; }
+.bp-acts { display: flex; gap: 8px; margin-top: 12px; }
+.bp-hint { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--fg3); font-size: 12px; }
+.bp-cards { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin: 16px 0 10px; }
+.bp-card { display: flex; align-items: center; gap: 11px; padding: 11px 12px; text-align: left; background: var(--bg1); border: 1px solid var(--hair); border-radius: 12px; color: var(--fg); transition: background .12s, border-color .12s; min-width: 0; }
+.bp-card:hover { background: var(--bg2); border-color: color-mix(in srgb, var(--fg) 16%, transparent); }
+.bp-card-ico { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--bg2); color: var(--fg2); flex: none; }
+.bp-card-t { display: flex; flex-direction: column; min-width: 0; }
+.bp-card-title { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bp-card-sub { color: var(--fg3); font-size: 11.5px; font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bp-scan, .bp-none { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 9px; color: var(--fg3); font-size: 12.5px; padding: 14px 0; }
+.bp-refresh .bp-ic { width: 14px; height: 14px; }
+
+/* docked devtools */
+.bp-dev { flex: none; height: 38%; min-height: 120px; display: flex; flex-direction: column; position: relative; background: var(--bg1); border-top: 1px solid var(--hair); }
+.bp-dev.right { height: auto; width: 42%; min-height: 0; min-width: 240px; border-top: 0; border-left: 1px solid var(--hair); }
+.bp-grip { position: absolute; z-index: 5; left: 0; right: 0; top: -3px; height: 6px; cursor: ns-resize; }
+.bp-dev.right .bp-grip { top: 0; bottom: 0; left: -3px; right: auto; width: 6px; height: auto; cursor: ew-resize; }
+.bp-devhead { flex: none; display: flex; align-items: center; gap: 2px; padding: 3px 6px 3px 12px; border-bottom: 1px solid var(--hair); }
+.bp-devtitle { font-size: 12px; color: var(--fg2); font-weight: 600; }
+.bp-spacer { flex: 1; }
+.bp-devhost { flex: 1; min-height: 0; position: relative; }
+
+/* popover menu */
+.bp-scrim { position: fixed; inset: 0; z-index: 9998; }
+.bp-menu { position: fixed; z-index: 9999; padding: 5px; background: var(--bg1); border: 1px solid var(--hair); border-radius: 12px; box-shadow: var(--shadow); max-height: 70vh; overflow: auto; animation: pop .12s ease-out; }
+.bp-mi { width: 100%; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 0; background: transparent; border-radius: 8px; text-align: left; color: var(--fg); }
+.bp-mi:hover { background: var(--bg2); }
+.bp-mi.sel { background: var(--bg2); }
+.bp-mi-t { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.bp-mi-l { font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bp-mi-s { font-size: 11.5px; color: var(--fg3); font-family: var(--mono); }
+.bp-mi-c { color: var(--fg2); display: grid; }
+.bp-mhead { padding: 6px 10px 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--fg3); }
+.bp-mempty { padding: 8px 10px; color: var(--fg3); font-size: 12.5px; }
+.bp-msep { height: 1px; margin: 4px 6px; background: var(--hair); }

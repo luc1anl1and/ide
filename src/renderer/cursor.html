@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Reva cursor</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+  #cur { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; transition: transform .5s cubic-bezier(.22,.8,.2,1), opacity .2s; will-change: transform; }
+  #cur svg { position: absolute; left: -3px; top: -2px; width: 30px; height: 30px; filter: drop-shadow(0 0 6px rgba(150,90,255,.9)) drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+  #chip { position: absolute; left: 22px; top: 20px; white-space: nowrap; padding: 3px 9px; border-radius: 99px; font: 600 11.5px/1.4 "Segoe UI", system-ui, sans-serif; color: #fff; background: linear-gradient(135deg, #7c3aed, #a78bfa); box-shadow: 0 4px 14px rgba(124,58,237,.5); max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+  .ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 3px solid #c4b5fd; opacity: 0; transform: scale(.3); pointer-events: none; }
+  .ring.go { animation: ring .55s ease-out; } @keyframes ring { 0% { opacity: .95; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.5); } }
+  #trail { position: absolute; inset: 0; }
+</style></head>
+<body>
+  <div id="cur"><div class="ring" id="ring"></div><svg viewBox="0 0 24 24"><path d="M4 2l15 9.2-6.3 1.5 3.7 6.9-2.8 1.5-3.7-6.9L5 17.8z" fill="#fff" stroke="#3b1d7a" stroke-width="1.4" stroke-linejoin="round"/></svg><div id="chip">Reva AI</div></div>
+  <script>
+    const cur = document.getElementById('cur'), chip = document.getElementById('chip'), ring = document.getElementById('ring');
+    let first = true, hideT = null;
+    const place = (x, y) => { cur.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px)'; };
+    const pulse = () => { ring.classList.remove('go'); void ring.offsetWidth; ring.classList.add('go'); };
+    cursorApi.on((m) => {
+      if (m.hide) { cur.style.opacity = 0; return; }
+      if (m.show) { if (m.label) chip.textContent = m.label; cur.style.opacity = 1; clearTimeout(hideT); hideT = setTimeout(() => { cur.style.opacity = 0; first = true; }, 12000); return; }
+      if (m.ripple) { pulse(); return; }
+      if (m.label) chip.textContent = String(m.label).slice(0, 60);
+      if (m.x != null) {
+        if (m.from && first) { cur.style.transition = 'none'; place(m.from.x, m.from.y); void cur.offsetWidth; cur.style.transition = ''; }
+        first = false; cur.style.opacity = 1; place(m.x, m.y);
+        if (m.x2 != null) setTimeout(() => place(m.x2, m.y2), 560);
+      } else if (m.stay) cur.style.opacity = 1;
+      clearTimeout(hideT); hideT = setTimeout(() => { cur.style.opacity = 0; first = true; }, 12000);
+    });
+  </script>
+</body></html>

@@ -1,0 +1,17 @@
+{
+  "console.log": { "prefix": ["clg", "log"], "body": ["console.log($1);"], "description": "console.log" },
+  "console.log labelled": { "prefix": "clgl", "body": ["console.log('${1:label}:', ${1:label});"], "description": "console.log with a label" },
+  "arrow function": { "prefix": "af", "body": ["const ${1:name} = (${2:args}) => {", "\t$0", "};"], "description": "Arrow function" },
+  "async arrow function": { "prefix": "aaf", "body": ["const ${1:name} = async (${2:args}) => {", "\t$0", "};"], "description": "Async arrow function" },
+  "try/catch": { "prefix": "tc", "body": ["try {", "\t$1", "} catch (${2:err}) {", "\t$0", "}"], "description": "try / catch" },
+  "import": { "prefix": "imp", "body": ["import ${2:thing} from '${1:module}';"], "description": "import default" },
+  "React functional component": {
+    "prefix": "rfc",
+    "body": ["export default function ${1:${TM_FILENAME_BASE}}({ ${2:props} }) {", "\treturn (", "\t\t<div>", "\t\t\t$0", "\t\t</div>", "\t);", "}"],
+    "description": "React function component"
+  },
+  "useState": { "prefix": "ust", "body": ["const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState(${2:initial});"], "description": "React useState" },
+  "useEffect": { "prefix": "uef", "body": ["useEffect(() => {", "\t$1", "\treturn () => {", "\t\t$2", "\t};", "}, [${3}]);"], "description": "React useEffect with cleanup" },
+  "useRef": { "prefix": "uref", "body": ["const ${1:ref} = useRef(${2:null});"], "description": "React useRef" },
+  "fetch json": { "prefix": "fj", "body": ["const res = await fetch(${1:url});", "if (!res.ok) throw new Error('HTTP ' + res.status);", "const ${2:data} = await res.json();"], "description": "fetch + json" }
+}

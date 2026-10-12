@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reva</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; -webkit-app-region: drag; user-select: none; }
+  .wrap { height: 100%; display: grid; place-items: center; }
+  img { width: 300px; height: 300px; object-fit: contain; animation: in .7s ease-out both, pulse 2.2s .7s ease-in-out infinite; }
+  @keyframes in { from { opacity: 0; transform: scale(.94); } }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 10px rgba(150, 90, 255, .30)); }
+    50%      { transform: scale(1.04); filter: drop-shadow(0 0 30px rgba(175, 125, 255, .85)); }
+  }
+  body.out img { animation: out .35s ease-in forwards; } @keyframes out { to { opacity: 0; transform: scale(1.04); } }
+</style>
+</head>
+<body>
+  <div class="wrap"><img src="assets/splash.png" alt=""></div>
+</body>
+</html>

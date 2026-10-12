@@ -1,0 +1,21 @@
+{
+  "id": "snippets-js-react",
+  "name": "JS & React Snippets",
+  "version": "1.0.0",
+  "description": "Handy JavaScript / TypeScript / React snippets (type rfc, uState, clg ...) and syntax highlighting for .env files.",
+  "author": "Reva",
+  "icon": "code",
+  "main": "index.js",
+  "reva": ">=0.3.0",
+  "activation": ["onStartup"],
+  "permissions": [],
+  "contributes": {
+    "snippets": [
+      { "language": "javascript", "file": "snippets/js.json" },
+      { "language": "typescript", "file": "snippets/js.json" }
+    ],
+    "languages": [
+      { "id": "dotenv", "extensions": [".env", ".env.local", ".env.example"], "aliases": ["Dotenv"], "configuration": "env.language.json" }
+    ]
+  }
+}

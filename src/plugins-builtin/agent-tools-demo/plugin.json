@@ -1,0 +1,28 @@
+{
+  "id": "agent-tools-demo",
+  "name": "Agent Tools Demo",
+  "version": "1.0.0",
+  "description": "Gives Claude, Codex and OpenCode two new tools through Reva's built-in MCP server: random_uuid and workspace_stats.",
+  "author": "Reva",
+  "icon": "agent",
+  "main": "index.js",
+  "reva": ">=0.3.0",
+  "activation": ["onStartup"],
+  "permissions": ["agents", "workspace.read"],
+  "contributes": {
+    "agentTools": [
+      {
+        "name": "random_uuid",
+        "description": "Generates one or more random UUIDs (v4). Use when you need fresh unique identifiers.",
+        "inputSchema": { "type": "object", "properties": { "count": { "type": "integer", "minimum": 1, "maximum": 50, "description": "How many UUIDs (default 1)" } } },
+        "readOnly": true
+      },
+      {
+        "name": "workspace_stats",
+        "description": "Counts the files in the user's open workspace by extension. Fast overview of what kind of project this is.",
+        "inputSchema": { "type": "object", "properties": { "top": { "type": "integer", "minimum": 1, "maximum": 30, "description": "How many extensions to list (default 10)" } } },
+        "readOnly": true
+      }
+    ]
+  }
+}

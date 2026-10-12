@@ -1,0 +1,12 @@
+{
+  "name": "Dracula Soft",
+  "dark": true,
+  "v": {
+    "bg": "#282a36", "bg1": "#2e303e", "bg2": "#363949", "bg3": "#424559", "border": "#4a4d63",
+    "fg": "#f2f2ec", "fg2": "#c3c6dc", "fg3": "#838aae", "accent": "#caa9fa", "accent2": "#ff92d0"
+  },
+  "t": {
+    "keyword": "ff92d0", "string": "f4f99d", "number": "caa9fa", "comment": "6e7aa8",
+    "type": "9aedfe", "func": "69ff94", "variable": "f2f2ec", "operator": "ff92d0"
+  }
+}

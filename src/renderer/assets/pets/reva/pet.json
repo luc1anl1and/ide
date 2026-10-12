@@ -1,0 +1,8 @@
+{
+  "id": "reva",
+  "displayName": "Reva",
+  "description": "Reva's own little gem blob. Roams your desktop, cheers when your agents finish.",
+  "spritesheetPath": "spritesheet.png",
+  "spriteVersionNumber": 2,
+  "kind": "creature"
+}

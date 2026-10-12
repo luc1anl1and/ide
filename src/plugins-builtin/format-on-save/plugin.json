@@ -1,0 +1,21 @@
+{
+  "id": "format-on-save",
+  "name": "Format on Save",
+  "version": "1.0.0",
+  "description": "Formats JSON, JavaScript, TypeScript, CSS and HTML with the editor's built-in formatter whenever you save.",
+  "author": "Reva",
+  "icon": "code",
+  "main": "index.js",
+  "reva": ">=0.3.0",
+  "activation": ["onStartup"],
+  "permissions": ["workspace.write"],
+  "contributes": {
+    "commands": [
+      { "id": "toggle", "title": "Format on Save: Toggle" }
+    ],
+    "settings": [
+      { "key": "enabled", "title": "Format on save", "type": "boolean", "default": true, "description": "Turn automatic formatting on or off" },
+      { "key": "languages", "title": "Languages", "type": "string", "default": "json,jsonc,javascript,typescript,css,scss,html", "description": "Comma separated Monaco language ids" }
+    ]
+  }
+}

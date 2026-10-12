@@ -1,0 +1,21 @@
+{
+  "id": "todo-sidebar",
+  "name": "TODO Sidebar",
+  "version": "1.0.0",
+  "description": "A sidebar panel listing every TODO / FIXME / HACK comment in the workspace. Click one to jump to it.",
+  "author": "Reva",
+  "icon": "list",
+  "main": "index.js",
+  "reva": ">=0.3.0",
+  "activation": ["onStartup"],
+  "permissions": ["workspace.read"],
+  "contributes": {
+    "sidebarPanels": [
+      { "id": "todos", "title": "TODOs", "icon": "list" }
+    ],
+    "commands": [
+      { "id": "show", "title": "TODO Sidebar: Show Panel" },
+      { "id": "refresh", "title": "TODO Sidebar: Refresh" }
+    ]
+  }
+}

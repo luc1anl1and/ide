@@ -1,0 +1,18 @@
+{
+  "id": "slash-commands-demo",
+  "name": "Slash Commands Demo",
+  "version": "1.0.0",
+  "description": "Adds /standup (rewrites your prompt into a standup request) and /clear-todos (removes full-line TODO comments from the open file).",
+  "author": "Reva",
+  "icon": "chat",
+  "main": "index.js",
+  "reva": ">=0.3.0",
+  "activation": ["onStartup"],
+  "permissions": ["chat", "workspace.read", "workspace.write"],
+  "contributes": {
+    "slashCommands": [
+      { "name": "standup", "description": "Draft a standup update from recent git activity" },
+      { "name": "clear-todos", "description": "Remove full-line TODO comments from the open file" }
+    ]
+  }
+}
