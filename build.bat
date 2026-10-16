@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title Reva - build installer
+title hyper-ide - build installer
 where node >nul 2>nul
 if errorlevel 1 (
   echo Node.js 20 or newer is required: https://nodejs.org

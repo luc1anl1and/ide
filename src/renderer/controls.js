@@ -94,7 +94,7 @@
       const fams = await Fonts.load(); const cur = first(A.settings[key] || o.def);
       const mk = (f, g) => ({ value: f, label: f, fontFamily: `"${f}"`, group: g });
       const monos = fams.filter((f) => Fonts.mono.has(f)), rest = fams.filter((f) => !Fonts.mono.has(f));
-      const items = [{ value: '__default', label: 'Default', sub: first(o.def) || 'System', group: '' }, ...(o.mono ? [...monos.map((f) => mk(f, 'Monospace')), ...rest.map((f) => mk(f, 'All fonts'))] : [...fams.map((f) => mk(f, ''))]), { value: '__install', label: 'Install a font…', sub: 'Add a .ttf / .otf to Windows and Reva', group: 'More' }];
+      const items = [{ value: '__default', label: 'Default', sub: first(o.def) || 'System', group: '' }, ...(o.mono ? [...monos.map((f) => mk(f, 'Monospace')), ...rest.map((f) => mk(f, 'All fonts'))] : [...fams.map((f) => mk(f, ''))]), { value: '__install', label: 'Install a font…', sub: 'Add a .ttf / .otf to Windows and hyper-ide', group: 'More' }];
       Combo.open(btn, { items, value: cur, search: true, width: 320, title: 'Font', onPick: async (v) => {
         if (v === '__install') { const files = await api.dialog.fonts(); if (!files || !files.length) return; const done = await Fonts.installFiles(files); if (done.length) { toast('Installed ' + done.join(', ') + ' — available in Windows and here'); setSetting(key, `"${done[0]}", ${o.mono ? 'monospace' : 'sans-serif'}`); paint(); } return; }
         setSetting(key, v === '__default' ? (o.def || '') : `"${v}", ${o.mono ? 'monospace' : 'sans-serif'}`); paint(); o.onChange && o.onChange();

@@ -1,4 +1,4 @@
-// Reva - main process
+// hyper-ide - main process
 const { app, BrowserWindow, ipcMain, dialog, shell, clipboard, nativeTheme, Menu, Tray, nativeImage, Notification, screen } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -8,19 +8,27 @@ const crypto = require('crypto');
 const pc = require('./pc');
 const pet = require('./pet');
 
-if (process.argv.includes('--shot')) { const pi = process.argv.indexOf('--profile'); app.setPath('userData', path.join(os.tmpdir(), 'reva-shot' + (pi > 0 ? '-' + process.argv[pi + 1] : ''))); }
-// The app data folder is now "Reva" (it used to be "amethyst"): carry settings, keys, saved chats and downloaded models over once
+if (process.argv.includes('--shot')) { const pi = process.argv.indexOf('--profile'); app.setPath('userData', path.join(os.tmpdir(), 'hyper-ide-shot' + (pi > 0 ? '-' + process.argv[pi + 1] : ''))); }
+// The app data folder is "hyper-ide" (migrate from "Reva" or "amethyst" if present)
 if (!process.argv.includes('--shot')) {
   try {
-    const appData = app.getPath('appData'); const oldDir = path.join(appData, 'amethyst'), newDir = path.join(appData, 'Reva');
+    const appData = app.getPath('appData');
+    const newDir = path.join(appData, 'hyper-ide');
+    const oldDirs = [path.join(appData, 'Reva'), path.join(appData, 'amethyst')];
     app.setPath('userData', newDir);
-    if (fs.existsSync(oldDir) && !fs.existsSync(path.join(newDir, 'settings.json'))) {
-      fs.mkdirSync(newDir, { recursive: true });
-      for (const n of ['settings.json', 'keys.json', 'logo.png', 'chats', 'models', 'backups']) { const from = path.join(oldDir, n); if (fs.existsSync(from)) fs.cpSync(from, path.join(newDir, n), { recursive: true, force: false }); }
+    for (const oldDir of oldDirs) {
+      if (fs.existsSync(oldDir) && !fs.existsSync(path.join(newDir, 'settings.json'))) {
+        fs.mkdirSync(newDir, { recursive: true });
+        for (const n of ['settings.json', 'keys.json', 'logo.png', 'chats', 'models', 'backups']) {
+          const from = path.join(oldDir, n);
+          if (fs.existsSync(from)) fs.cpSync(from, path.join(newDir, n), { recursive: true, force: false });
+        }
+        break;
+      }
     }
   } catch { /* first run on a fresh machine */ }
 }
-app.setAppUserModelId('com.reva.ide');
+app.setAppUserModelId('com.hyperide.ide');
 if (!app.requestSingleInstanceLock() && !process.argv.includes('--shot')) app.quit();
 
 const argv = process.argv.slice(1);
@@ -262,7 +270,7 @@ function startClaude(o, hooks) {
   if (appendSystemPrompt) args.push('--append-system-prompt', appendSystemPrompt);
   for (const d of addDirs || []) args.push('--add-dir', d);
   if (Array.isArray(o.extraArgs)) args.push(...o.extraArgs);
-  const p = spawn(claudeBin(custom), args, { cwd: cwd && fs.existsSync(cwd) ? cwd : os.homedir(), windowsHide: true, env: { ...process.env, ...(o.env || {}), NO_COLOR: '1', CLAUDE_CODE_ENTRYPOINT: 'reva-ide' } });
+  const p = spawn(claudeBin(custom), args, { cwd: cwd && fs.existsSync(cwd) ? cwd : os.homedir(), windowsHide: true, env: { ...process.env, ...(o.env || {}), NO_COLOR: '1', CLAUDE_CODE_ENTRYPOINT: 'hyper-ide' } });
   let buf = '';
   p.stdout.on('data', (d) => {
     buf += d.toString('utf8'); let i;
@@ -458,7 +466,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1500, height: 920, minWidth: 900, minHeight: 600,
     backgroundColor: '#0e0b14', show: false,
-    title: 'Reva', icon: path.join(__dirname, 'renderer', 'assets', 'icon.ico'),
+    title: 'hyper-ide', icon: path.join(__dirname, 'renderer', 'assets', 'icon.ico'),
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#120d1c', symbolColor: '#cbb8f0', height: 46 },
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, spellcheck: false, sandbox: false, webviewTag: true, backgroundThrottling: false /* agents keep working while the window is hidden */ },
@@ -499,7 +507,7 @@ function createWindow() {
       app.exit(0);
     });
   }
-  // closing the window keeps Reva (and its pet + running agents) alive in the tray; "Quit" in the tray menu really exits
+  // closing the window keeps hyper-ide (and its pet + running agents) alive in the tray; "Quit" in the tray menu really exits
   win.on('close', (e) => { if (!SHOT && !pet.isQuitting() && pet.keepRunning()) { e.preventDefault(); win.hide(); pet.onMainHidden(); } });
   win.on('closed', () => { win = null; for (const w of pops.values()) { try { w.destroy(); } catch { } } });
 }
@@ -530,7 +538,7 @@ ipcMain.handle('pop:open', (_e, { id, ws, bg, fg }) => {
   if (!POP_TITLES[id]) return false;
   const have = pops.get(id); if (have && !have.isDestroyed()) { have.focus(); return true; }
   const w = new BrowserWindow({
-    width: 380, height: 760, minWidth: 260, minHeight: 320, backgroundColor: bg || '#0e0b14', show: false, title: 'Reva - ' + POP_TITLES[id],
+    width: 380, height: 760, minWidth: 260, minHeight: 320, backgroundColor: bg || '#0e0b14', show: false, title: 'hyper-ide - ' + POP_TITLES[id],
     icon: path.join(__dirname, 'renderer', 'assets', 'icon.ico'), titleBarStyle: 'hidden', titleBarOverlay: { color: bg || '#120d1c', symbolColor: fg || '#cbb8f0', height: 40 },
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, spellcheck: false, sandbox: false },
   });
@@ -561,21 +569,21 @@ const APP_ICON = path.join(__dirname, 'renderer', 'assets', 'icon.ico');
 ipcMain.handle('app:notify', (_e, o) => {
   try {
     if (!Notification.isSupported()) return false;
-    const n = new Notification({ title: String((o && o.title) || 'Reva').slice(0, 80), body: String((o && o.body) || '').slice(0, 240), icon: APP_ICON, silent: false });
+    const n = new Notification({ title: String((o && o.title) || 'hyper-ide').slice(0, 80), body: String((o && o.body) || '').slice(0, 240), icon: APP_ICON, silent: false });
     n.on('click', () => { revealMain(); if (o && o.chatId) send('pet:cmd', { fn: 'open', chatId: o.chatId }); });
     n.show(); return true;
   } catch { return false; }
 });
 // In development the app runs as electron.exe, which Windows would label "Electron" in toasts. A Start-menu shortcut that
-// carries our AppUserModelID gives them the Reva name and icon (the installed app gets this shortcut from the installer).
+// carries our AppUserModelID gives them the hyper-ide name and icon (the installed app gets this shortcut from the installer).
 function ensureToastIdentity() {
   if (process.platform !== 'win32' || SHOT) return;
   try {
     const progs = path.join(app.getPath('appData'), 'Microsoft', 'Windows', 'Start Menu', 'Programs');
-    const lnk = path.join(progs, app.isPackaged ? 'Reva.lnk' : 'Reva (dev).lnk');
+    const lnk = path.join(progs, app.isPackaged ? 'hyper-ide.lnk' : 'hyper-ide (dev).lnk');
     const opts = app.isPackaged
-      ? { target: process.execPath, cwd: path.dirname(process.execPath), icon: process.execPath, iconIndex: 0, description: 'Reva', appUserModelId: 'com.reva.ide' }
-      : { target: process.execPath, args: '"' + app.getAppPath() + '"', cwd: app.getAppPath(), icon: APP_ICON, iconIndex: 0, description: 'Reva', appUserModelId: 'com.reva.ide' };
+      ? { target: process.execPath, cwd: path.dirname(process.execPath), icon: process.execPath, iconIndex: 0, description: 'hyper-ide', appUserModelId: 'com.hyperide.ide' }
+      : { target: process.execPath, args: '"' + app.getAppPath() + '"', cwd: app.getAppPath(), icon: APP_ICON, iconIndex: 0, description: 'hyper-ide', appUserModelId: 'com.hyperide.ide' };
     shell.writeShortcutLink(lnk, fs.existsSync(lnk) ? 'update' : 'create', opts);
   } catch { /* not critical */ }
 }
@@ -585,7 +593,7 @@ pc.init({
   ask: async ({ level, detail }) => {
     const parent = win && !win.isDestroyed() && win.isVisible() && !win.isMinimized() ? win : null;
     const r = await dialog.showMessageBox(parent, {
-      type: 'warning', title: 'Reva', noLink: true, buttons: ['Allow once', 'Allow for this session', 'Deny'], defaultId: 2, cancelId: 2,
+      type: 'warning', title: 'hyper-ide', noLink: true, buttons: ['Allow once', 'Allow for this session', 'Deny'], defaultId: 2, cancelId: 2,
       message: level === 'view' ? 'Allow the AI to look at your PC?' : 'Allow the AI to control your PC?', detail,
       icon: nativeImage.createFromPath(APP_ICON),
     });

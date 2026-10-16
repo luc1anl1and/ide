@@ -1,5 +1,5 @@
-// IDE tools server: an MCP (Model Context Protocol) server, "reva-ide", that lets the coding agents running
-// inside Reva use the IDE's own features (preview browser, editor, terminal).
+// IDE tools server: an MCP (Model Context Protocol) server, "hyper-ide", that lets the coding agents running
+// inside hyper-ide use the IDE's own features (preview browser, editor, terminal).
 //
 //   start({ invoke, token, getExtraTools? }) -> Promise<{ url, port, token, close() }>
 //       invoke(toolName, args) -> Promise<{ content:[{type:'text',text}|{type:'image',data,mimeType}], isError? }>
@@ -19,7 +19,7 @@ const http = require('http');
 const crypto = require('crypto');
 const pcMod = require('./pc');
 
-const SERVER_NAME = 'reva-ide';
+const SERVER_NAME = 'hyper-ide';
 const SERVER_VERSION = '1.0.0';
 const PROTOCOLS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 const CALL_TIMEOUT_MS = 25000;
@@ -36,7 +36,7 @@ const TOOLS = [
   {
     name: 'ide_context',
     title: 'IDE context',
-    description: 'Shows what the user is looking at in the Reva IDE right now: workspace folder, the active file (path, language, cursor line, currently selected text), all open editor tabs, open preview (browser) tabs with their id/url/title, and the number of terminals. Call it when the user refers to "this file", "the selection", "what I have open" or "the preview", or before using the preview_* tools to learn the preview ids.',
+    description: 'Shows what the user is looking at in the hyper-ide IDE right now: workspace folder, the active file (path, language, cursor line, currently selected text), all open editor tabs, open preview (browser) tabs with their id/url/title, and the number of terminals. Call it when the user refers to "this file", "the selection", "what I have open" or "the preview", or before using the preview_* tools to learn the preview ids.',
     inputSchema: obj({}),
     annotations: ro,
   },
@@ -362,11 +362,11 @@ function start({ invoke, token, getExtraTools } = {}) {
 }
 
 // ------------------------------------------------------------------ per-agent wiring
-const HINT = 'You are running inside the Reva IDE, which exposes its own features as tools (MCP server "reva-ide"): ' +
+const HINT = 'You are running inside the hyper-ide IDE, which exposes its own features as tools (MCP server "hyper-ide"): ' +
   'ide_context (what the user has open/selected), open_file, open_preview (built-in browser preview), terminal_run and terminal_read (visible terminal). ' +
   'To test a web page you can drive the preview WITHOUT screenshots: preview_snapshot (text + numbered interactive elements), preview_click, preview_type, preview_press, preview_hover, preview_scroll, preview_wait, preview_console, preview_html, preview_eval. ' +
   'Use preview_screenshot only when you really need to judge the visual layout. After you build or change a web page or start a dev server, open it with open_preview and check it yourself instead of asking the user to look. ' +
-  'You can also see and operate the user\'s PC with the pc_* tools: pc_windows, pc_snapshot (controls as exact text), pc_screenshot (see the desktop; use it for anything without accessible controls), pc_click / pc_type / pc_key / pc_move / pc_scroll / pc_drag, pc_focus, pc_launch, pc_wait. When the user asks you to open, start, find or do something on their computer (an app, a file, a website, a setting), or to test a desktop app you built, do it with these tools instead of explaining how. Check pc_windows first: if the app is already open (even minimized in the taskbar) bring it up with pc_focus (pc_launch does that for you) instead of starting another copy. Never type commands into Win+R or a terminal to start apps (use pc_launch), keep keyboard use to a minimum, and prefer pc_snapshot + refs over pixel coordinates. You never use the user\'s mouse: you have your own AI cursor (clicks are injected as touch), and the same goes for testing the apps you build. The user sees a purple AI cursor and is asked for permission by Reva; if they deny, respect it. ' +
+  'You can also see and operate the user\'s PC with the pc_* tools: pc_windows, pc_snapshot (controls as exact text), pc_screenshot (see the desktop; use it for anything without accessible controls), pc_click / pc_type / pc_key / pc_move / pc_scroll / pc_drag, pc_focus, pc_launch, pc_wait. When the user asks you to open, start, find or do something on their computer (an app, a file, a website, a setting), or to test a desktop app you built, do it with these tools instead of explaining how. Check pc_windows first: if the app is already open (even minimized in the taskbar) bring it up with pc_focus (pc_launch does that for you) instead of starting another copy. Never type commands into Win+R or a terminal to start apps (use pc_launch), keep keyboard use to a minimum, and prefer pc_snapshot + refs over pixel coordinates. You never use the user\'s mouse: you have your own AI cursor (clicks are injected as touch), and the same goes for testing the apps you build. The user sees a purple AI cursor and is asked for permission by hyper-ide; if they deny, respect it. ' +
   'Use ide_context when the user says "this file" or "the selection"; use open_file to show them a file.';
 
 /** Merge an OPENCODE_CONFIG_CONTENT fragment into an existing inline config (JSON string or object) -> JSON string. */
@@ -407,8 +407,8 @@ function agentConfig(provider, info, opts = {}) {
 
   if (prov === 'codex') {
     const k = 'mcp_servers.' + SERVER_NAME;
-    out.env = { REVA_IDE_TOKEN: info.token };
-    out.configArgs = ['-c', k + '.url=' + tomlStr(info.url), '-c', k + '.bearer_token_env_var="REVA_IDE_TOKEN"',
+    out.env = { HYPER_IDE_TOKEN: info.token };
+    out.configArgs = ['-c', k + '.url=' + tomlStr(info.url), '-c', k + '.bearer_token_env_var="HYPER_IDE_TOKEN"',
       '-c', k + '.startup_timeout_sec=15', '-c', k + '.tool_timeout_sec=180',
       // Codex does NOT ask about MCP tools by default (verified: even in "untrusted" mode). "prompt" makes every tool
       // raise an mcpServer/elicitation/request (codex_approval_kind: mcp_tool_call); the per-tool "approve" below

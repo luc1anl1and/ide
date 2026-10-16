@@ -77,7 +77,7 @@ class Rpc {
   respond(id, result) { this._send({ id, result }); }
   respondError(id, code, message) { this._send({ id, error: { code, message } }); }
   async handshake() {
-    const r = await this.req('initialize', { clientInfo: { name: 'reva', title: 'Reva', version: '0.3' }, capabilities: { experimentalApi: true } });
+    const r = await this.req('initialize', { clientInfo: { name: 'hyper-ide', title: 'hyper-ide', version: '0.9' }, capabilities: { experimentalApi: true } });
     if (!r.error) this.note('initialized');
     return r;
   }
@@ -315,7 +315,7 @@ function start(opts, hooks) {
         const { threadId: _t, turnId: _u, ...rest } = p;
         ask(id, 'elicitation', p, `mcp__${p.serverName}__elicitation`, rest, p.message || ''); break;
       }
-      default: rpc.respondError(id, -32601, 'Method not supported by Reva: ' + j.method);
+      default: rpc.respondError(id, -32601, 'Method not supported by hyper-ide: ' + j.method);
     }
   }
   function onControlResponse(msg) {

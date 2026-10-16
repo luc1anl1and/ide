@@ -20,7 +20,7 @@ window.openSettings = function (section) {
     // ---------------------------------------------------------------- profile
     general() {
       return [h('h3', null, 'Profile'), lead('How you appear inside the app. Your email address is never shown anywhere.'),
-        row('Display name', 'Shown in the title bar and the greeting', txt(s, 'userName', 'Dev')), group('Branding'), row('App name', null, txt(s, 'brandName', 'Reva'))];
+        row('Display name', 'Shown in the title bar and the greeting', txt(s, 'userName', 'Dev')), group('Branding'), row('App name', null, txt(s, 'brandName', 'hyper-ide'))];
     },
     // ---------------------------------------------------------------- appearance
     appearance() {
@@ -210,7 +210,7 @@ window.openSettings = function (section) {
       const imp = async (fn) => { const r = await (fn === 'dir' ? api.pet.importFolder() : api.pet.import()); if (r && r.ok) { toast('Pet added'); setP('id', r.id); draw(); } else if (r && !r.canceled) toast(r.error || 'Could not import that pet', true); };
       return [h('h3', null, 'Pet & PC control'), lead('A little companion that lives on your desktop: it roams around, speaks up when your agents finish or need you, and opens a prompt bar when you click it.'),
         row('Show the desktop pet', 'Click it to talk to your AI without opening the IDE', swP('enabled')),
-        row('Keep running in the tray', 'Closing the window hides Reva instead of quitting, so the pet and your agents keep working. Quit from the tray icon.', swP('keepRunning')),
+        row('Keep running in the tray', 'Closing the window hides hyper-ide instead of quitting, so the pet and your agents keep working. Quit from the tray icon.', swP('keepRunning')),
         row('Walk around the screen', null, swP('wander')), row('Speech bubbles', 'Done / needs approval / errors', swP('bubbles')), row('Random tips', '“If you need help, just let me know…”', swP('quips')), row('Size', null, scale),
         group('Choose a pet'), grid,
         h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '10px 0 4px' } },
@@ -218,7 +218,7 @@ window.openSettings = function (section) {
           h('button', { class: 'btn sm', onclick: () => window.open('https://codex-pets.net/') }, 'Get more pets ↗')),
         h('p', { class: 'u-note' }, 'Pets use the Codex pet format (.codex-pet.zip with pet.json + a spritesheet) — download one from codex-pets.net and import it here. You can also import a single PNG/WebP picture; it becomes a pet that bobs and hops. Format details: docs/PETS.md.'),
         group('AI control of this PC'),
-        row('Let agents use my PC', 'Agents can list windows, read and operate the controls of Windows apps (no screenshots) to test what they build. Reva always asks you first: once, or for the whole session. Preview-page testing inside Reva needs no permission.', Sel([['ask', 'Ask me first (recommended)'], ['off', 'Never']], s.pcControl || 'ask', (v) => { s.pcControl = v; saveSettings(); }, { menuWidth: 240 })),
+        row('Let agents use my PC', 'Agents can list windows, read and operate the controls of Windows apps (no screenshots) to test what they build. hyper-ide always asks you first: once, or for the whole session. Preview-page testing inside hyper-ide needs no permission.', Sel([['ask', 'Ask me first (recommended)'], ['off', 'Never']], s.pcControl || 'ask', (v) => { s.pcControl = v; saveSettings(); }, { menuWidth: 240 })),
         row('Current access', 'Revoke anything you allowed for this session', h('button', { class: 'btn sm', onclick: async () => { await api.pet.revoke(); toast('PC access revoked'); } }, 'Revoke now'))];
     },
     plugins: () => (window.RevaPlugins ? RevaPlugins.settingsView() : [h('h3', null, 'Plugins'), h('p', { class: 'lead' }, 'The plugin system is not available.')]),
@@ -248,8 +248,8 @@ window.openSettings = function (section) {
       const agents = h('div');
       BUILTIN_IDS.forEach((id) => { const pd = (A.det && A.det.providers && A.det.providers[id]) || {}; agents.append(row(PROV[id].name, PROV[id].sub, h('span', { class: 'mono', style: { color: 'var(--fg2)' } }, pd.installed ? String(pd.version || 'installed').slice(0, 28) : 'not installed'))); });
       return [h('h3', null, 'About'),
-        h('div', { class: 'about' }, h('span', { class: 'lg-prev big' }, A.logo ? h('img', { src: A.logo }) : ((s.brandName || 'R')[0])),
-          h('div', null, h('b', null, (s.brandName || 'Reva') + ' 0.9'), h('p', null, 'A desktop IDE built around command-line coding agents. Chat with Claude Code, Codex, OpenCode or your own model, edit code, run a real terminal and preview your site — in one window.'))),
+        h('div', { class: 'about' }, h('span', { class: 'lg-prev big' }, A.logo ? h('img', { src: A.logo }) : ((s.brandName || 'h')[0])),
+          h('div', null, h('b', null, (s.brandName || 'hyper-ide') + ' 0.9'), h('p', null, 'A desktop IDE built around command-line coding agents. Chat with Claude Code, Codex, OpenCode or your own model, edit code, run a real terminal and preview your site — in one window.'))),
         group('What’s inside'),
         h('div', { class: 'chips-about' }, ['Claude · Codex · OpenCode', 'Custom API & command agents', 'Live usage limits', 'Local voice transcription', 'Image, audio & video input', 'Undo, retry & file review', 'Sub-agents panel', 'Desktop pet', 'PC control for agents', 'Preview testing tools', 'Plugins & agent tools', 'Real terminal', 'Browser preview', 'Monaco editor', 'Custom themes & fonts'].map((x) => h('span', { class: 'badge' }, x))),
         group('Connected agents'), agents,

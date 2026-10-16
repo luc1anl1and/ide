@@ -10,8 +10,8 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const rel = path.join(root, 'release');
-const zip = path.join(rel, `Reva-${pkg.version}-portable.zip`);
-const out = path.join(rel, `Reva-Setup-${pkg.version}.exe`);
+const zip = path.join(rel, `hyper-${pkg.version}-portable.zip`);
+const out = path.join(rel, `hyper-Setup-${pkg.version}.exe`);
 if (process.platform !== 'win32') { console.log('setup: Windows only, skipped'); process.exit(0); }
 if (!fs.existsSync(zip)) { console.error('setup: missing ' + zip + ' (run electron-builder first)'); process.exit(1); }
 

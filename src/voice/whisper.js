@@ -27,7 +27,13 @@ let nextId = 1;
 const queue = [];
 let current = null; // {id, resolve, reject, onProgress}
 
-function getModelDir() { return modelDir || path.join(os.homedir(), '.reva-models'); }
+function getModelDir() {
+  if (modelDir) return modelDir;
+  const newDir = path.join(os.homedir(), '.hyper-ide-models');
+  const oldDir = path.join(os.homedir(), '.reva-models');
+  if (!fs.existsSync(newDir) && fs.existsSync(oldDir)) return oldDir;
+  return newDir;
+}
 function setModelDir(dir) {
   if (dir && dir !== modelDir) {
     modelDir = dir;

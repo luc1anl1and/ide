@@ -9,9 +9,9 @@ const zlib = require('zlib');
 
 const root = path.resolve(__dirname, '..');
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-const top = `reva-${pkg.version}`;
+const top = `hyper-ide-${pkg.version}`;
 const outDir = path.join(root, 'release');
-const outFile = path.join(outDir, `reva-source-${pkg.version}.zip`);
+const outFile = path.join(outDir, `hyper-ide-source-${pkg.version}.zip`);
 
 const EXCLUDE_DIRS = new Set(['node_modules', 'dist', 'release', 'out', '.git', '.svn', '.hg', '.claude', '.vscode', '.idea', 'coverage', 'tmp', 'temp', '.cache']);
 const EXCLUDE_FILE = [/\.log$/i, /\.tmp$/i, /~$/, /^\.env(\..*)?$/i, /^npm-debug\.log/, /^Thumbs\.db$/i, /^\.DS_Store$/, /\.zip$/i, /\.exe$/i, /^settings\.json$/i, /^keys\.json$/i];

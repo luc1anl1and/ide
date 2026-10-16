@@ -1,6 +1,6 @@
 // Settings UI + live application
 window.applyBrand = function () {
-  const s = A.settings; const name = s.brandName || 'Reva';
+  const s = A.settings; const name = s.brandName || 'hyper-ide';
   $('#brand-name').textContent = name; document.title = name;
   const lg = $('#brand-logo'); lg.innerHTML = '';
   lg.classList.toggle('ph', !A.logo); if (A.logo) lg.append(h('img', { src: A.logo })); else lg.textContent = (name[0] || 'R').toUpperCase();

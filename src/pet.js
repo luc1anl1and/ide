@@ -88,7 +88,7 @@ function createPet() {
   const b = clampToDisplay({ x: pos.x, y: pos.y, width: W, height: BASE_H });
   petWin = new ctx.BrowserWindow({
     ...b, transparent: true, frame: false, resizable: false, movable: false, skipTaskbar: true, alwaysOnTop: true, hasShadow: false, show: false, focusable: true,
-    backgroundColor: '#00000000', title: 'Reva pet', icon: iconPath(), type: 'toolbar', maximizable: false, minimizable: false, fullscreenable: false,
+    backgroundColor: '#00000000', title: 'hyper-ide pet', icon: iconPath(), type: 'toolbar', maximizable: false, minimizable: false, fullscreenable: false,
     webPreferences: { preload: path.join(__dirname, 'pet-preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: false, backgroundThrottling: false },
   });
   petSize = { w: b.width, h: b.height };
@@ -107,7 +107,7 @@ function createTray() {
   if (tray) return;
   try {
     const img = ctx.nativeImage.createFromPath(iconPath()).resize({ width: 16, height: 16 });
-    tray = new ctx.Tray(img); tray.setToolTip('Reva');
+    tray = new ctx.Tray(img); tray.setToolTip('hyper-ide');
     tray.on('click', () => ctx.showMain());
     tray.on('right-click', () => tray.popUpContextMenu(buildMenu()));
   } catch { tray = null; }
@@ -115,13 +115,13 @@ function createTray() {
 function buildMenu() {
   const on = !!(petWin && !petWin.isDestroyed() && petWin.isVisible());
   return ctx.Menu.buildFromTemplate([
-    { label: 'Open Reva', click: () => ctx.showMain() },
+    { label: 'Open hyper-ide', click: () => ctx.showMain() },
     { label: on ? 'Hide pet' : 'Show pet', click: () => { if (on) petWin.hide(); else { createPet(); petWin.showInactive(); } } },
     { label: 'Ask the AI…', click: () => { createPet(); toPet('pet:open', { tab: 'ask' }); if (petWin) petWin.showInactive(); } },
     { type: 'separator' },
     { label: 'Stop PC control', enabled: pcState.view || pcState.control, click: () => ctx.pc.revoke() },
     { type: 'separator' },
-    { label: 'Quit Reva', click: () => { quitting = true; ctx.app.quit(); } },
+    { label: 'Quit hyper-ide', click: () => { quitting = true; ctx.app.quit(); } },
   ]);
 }
 function destroyTray() { if (tray) { try { tray.destroy(); } catch { } tray = null; } }
@@ -132,7 +132,7 @@ function destroyTray() { if (tray) { try { tray.destroy(); } catch { } tray = nu
 const curWins = new Map(); let lastOv = null, curHideT = null;
 function overlayFor(d) {
   let o = curWins.get(d.id); if (o && !o.win.isDestroyed()) return o;
-  const win = new ctx.BrowserWindow({ x: d.bounds.x, y: d.bounds.y, width: d.bounds.width, height: d.bounds.height, transparent: true, frame: false, resizable: false, movable: false, focusable: false, skipTaskbar: true, alwaysOnTop: true, hasShadow: false, show: false, type: 'toolbar', backgroundColor: '#00000000', title: 'Reva cursor',
+  const win = new ctx.BrowserWindow({ x: d.bounds.x, y: d.bounds.y, width: d.bounds.width, height: d.bounds.height, transparent: true, frame: false, resizable: false, movable: false, focusable: false, skipTaskbar: true, alwaysOnTop: true, hasShadow: false, show: false, type: 'toolbar', backgroundColor: '#00000000', title: 'hyper-ide cursor',
     webPreferences: { preload: path.join(__dirname, 'cursor-preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: false, backgroundThrottling: false } });
   win.setAlwaysOnTop(true, 'screen-saver'); win.setIgnoreMouseEvents(true); win.setBounds(d.bounds);
   o = { win, ready: false, queue: [], display: d };

@@ -31,7 +31,7 @@
     api.on('pop:ws', (dir) => { A.ws = dir; Explorer.expanded.clear(); Explorer.cache = {}; Explorer.sel = null; A.welcomeChats = null; mount(); });
     api.on('fs:changed', (paths) => { if (id === 'explorer') Explorer.refresh(paths); });
     api.on('pop:theme', (t) => { s.theme = t.theme; s.accent = t.accent; paint(); });
-    document.title = 'Reva — ' + (TITLES[id] || id);
+    document.title = 'hyper-ide — ' + (TITLES[id] || id);
   }
   document.addEventListener('DOMContentLoaded', boot);
 })();

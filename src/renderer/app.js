@@ -197,7 +197,7 @@
       const list = all.filter((x) => PROV[x.provider]); const last = list.find(here) || list[0];
       if (!last) return;
       const open = (x) => { const cwd = x.cwd && x.cwd.toLowerCase() !== (A.ws || '').toLowerCase() ? x.cwd : null; Chat.new({ provider: x.provider, title: x.title.slice(0, 30), cwd, revaId: x.source === 'reva' ? x.id : null, resume: x.source === 'reva' ? (x.sessionId || null) : x.id }); App.toggleChat(true); };
-      const meta = (x) => [PROV[x.provider].name, x.source === 'reva' ? 'saved in Reva' : null, x.cwd ? basename(x.cwd) : null, timeAgo(x.updatedAt)].filter(Boolean).join(' · ');
+      const meta = (x) => [PROV[x.provider].name, x.source === 'reva' ? 'saved in hyper-ide' : null, x.cwd ? basename(x.cwd) : null, timeAgo(x.updatedAt)].filter(Boolean).join(' · ');
       cont.append(h('div', { class: 'wc-last' }, h('span', { class: 'av', html: PROV[last.provider].logo }), h('div', { class: 'wc-lt' }, h('small', null, 'Continue from your last chat?'), h('b', null, last.title), h('span', null, meta(last))), h('button', { class: 'btn primary', onclick: () => open(last) }, 'Continue')));
       const more = list.filter((x) => x !== last).slice(0, 3);
       if (more.length) cont.append(h('div', { class: 'wc-more' }, more.map((x) => h('button', { class: 'wc-mi', onclick: () => open(x), title: x.title }, h('span', { class: 'av', html: PROV[x.provider].logo }), h('span', { class: 't' }, x.title), h('span', { class: 'm' }, timeAgo(x.updatedAt))))));

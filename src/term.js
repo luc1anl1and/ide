@@ -112,7 +112,7 @@ async function detectShells(force) {
 function strEnv(extra) {
   const e = { ...process.env, ...(extra || {}) };
   delete e.ELECTRON_RUN_AS_NODE; // would turn child Electron-based tools into plain node
-  e.TERM_PROGRAM = 'Reva';
+  e.TERM_PROGRAM = 'hyper-ide';
   e.COLORTERM = 'truecolor';
   e.TERM = 'xterm-256color';
   for (const k of Object.keys(e)) if (e[k] == null) delete e[k]; else e[k] = String(e[k]);

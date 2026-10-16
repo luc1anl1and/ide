@@ -24,7 +24,7 @@ const path = require('path');
 const { StringDecoder } = require('string_decoder');
 const inst = require('./installer');
 
-const KEY_ENV = 'REVA_CUSTOM_API_KEY';
+const KEY_ENV = 'HYPER_IDE_CUSTOM_API_KEY';
 const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex'));
 const strEnv = (o) => { const r = {}; if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) if (k && v != null) r[k] = String(v); return r; };
 

@@ -10,7 +10,7 @@ window.DEFAULTS = {
   editorFont: '"JetBrains Mono Variable", "Cascadia Code", Consolas', editorSize: 13, editorLineHeight: 0, chatFont: '', termFont: '"CaskaydiaCove Nerd Font Mono", "JetBrains Mono Variable", "Cascadia Code", Consolas, monospace', termSize: 13, termCursor: 'bar', userFonts: [], agentCfg: {}, customAgents: [], envVars: [], keyUse: {}, ligatures: false, wordWrap: 'off', minimap: false,
   lineNumbers: 'on', tabSize: 2, autoSave: 'off', cursorStyle: 'line', smoothCaret: true, bracketColors: true,
   model: '', effort: '', permissionMode: 'manual', appendSystemPrompt: '', claudePath: '', codexPath: '', opencodePath: '', addDirs: [],
-  brandName: 'Reva', userName: 'Dev', provider: 'claude', chatLayout: 'side',
+  brandName: 'hyper-ide', userName: 'Dev', provider: 'claude', chatLayout: 'side',
   defaults: { claude: { model: '', effort: '', mode: 'manual' }, codex: { model: '', effort: '', mode: 'ask' }, opencode: { model: '', effort: '', mode: 'ask' } },
   voice: { model: 'small', language: 'auto', autoSend: false, live: true, frames: 8, deviceId: 'default' },
   showThinking: true, expandTools: false, notify: true, ideTools: true, shareOpenFile: true, shell: 'powershell',

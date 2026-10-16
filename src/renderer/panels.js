@@ -160,7 +160,7 @@
       const out = h('div', { class: 'panel-body chats' });
       const src = h('div', { class: 'seg sm' }); const chips = h('div', { class: 'chips-row' });
       const search = h('input', { class: 'inp', placeholder: 'Search chats…', value: this.q, oninput: () => { this.q = search.value.toLowerCase(); draw(); } });
-      const drawSrc = () => { src.innerHTML = ''; [['all', 'All'], ['reva', 'Reva'], ['cli', 'CLI history']].forEach(([v, l]) => src.append(h('button', { class: this.source === v ? 'on' : '', title: v === 'reva' ? 'Chats saved by this app, in its own folder' : v === 'cli' ? 'History read from Claude, Codex and OpenCode themselves — including chats started in a terminal' : '', onclick: () => { this.source = v; drawSrc(); draw(); } }, l))); };
+      const drawSrc = () => { src.innerHTML = ''; [['all', 'All'], ['reva', 'hyper-ide'], ['cli', 'CLI history']].forEach(([v, l]) => src.append(h('button', { class: this.source === v ? 'on' : '', title: v === 'reva' ? 'Chats saved by this app, in its own folder' : v === 'cli' ? 'History read from Claude, Codex and OpenCode themselves — including chats started in a terminal' : '', onclick: () => { this.source = v; drawSrc(); draw(); } }, l))); };
       const drawChips = () => {
         chips.innerHTML = '';
         [['all', 'All agents', null], ...PROV_IDS.map((id) => [id, PROV[id].name, PROV[id].logo])].forEach(([id, label, logo]) =>
@@ -176,8 +176,8 @@
         const model = s.model ? String(s.model).replace(/^claude-/, '').replace(/-\d{8}$/, '') : '';
         const row = h('div', { class: 'item chat-item', title: (s.cwd || '') + '\n' + s.id, onclick: () => open(s) },
           h('span', { class: 'av', html: P.logo }),
-          h('div', { class: 'ci' }, h('div', { class: 'it1' }, s.title), h('div', { class: 'it2' }, [s.source === 'reva' ? 'Reva' : null, model, s.cwd ? basename(s.cwd) : null, timeAgo(s.updatedAt)].filter(Boolean).join(' · '))),
-          s.source === 'reva' ? h('button', { class: 'icon-btn sm del', title: 'Delete this saved chat', html: icon('trash'), onclick: async (e) => { e.stopPropagation(); if (!(await confirmBox('Delete chat', `Delete “${s.title}” from Reva’s saved chats? The agent’s own history is not touched.`, 'Delete', true))) return; await api.chats.delete(s.id); this.all = this.all.filter((x) => x !== s); draw(); } }) : null);
+          h('div', { class: 'ci' }, h('div', { class: 'it1' }, s.title), h('div', { class: 'it2' }, [s.source === 'reva' ? 'hyper-ide' : null, model, s.cwd ? basename(s.cwd) : null, timeAgo(s.updatedAt)].filter(Boolean).join(' · '))),
+          s.source === 'reva' ? h('button', { class: 'icon-btn sm del', title: 'Delete this saved chat', html: icon('trash'), onclick: async (e) => { e.stopPropagation(); if (!(await confirmBox('Delete chat', `Delete “${s.title}” from hyper-ide’s saved chats? The agent’s own history is not touched.`, 'Delete', true))) return; await api.chats.delete(s.id); this.all = this.all.filter((x) => x !== s); draw(); } }) : null);
         return row;
       };
       const draw = () => {
@@ -189,7 +189,7 @@
         }
         if (this.loading && !this.all) { out.append(h('div', { class: 'empty' }, h('span', { class: 'spin' }), h('div', { style: { marginTop: '8px' } }, 'Loading chats…'))); return; }
         const list = (this.all || []).filter((s) => PROV[s.provider] && (this.filter === 'all' || s.provider === this.filter) && (this.source === 'all' || s.source === this.source) && (!this.q || (s.title + ' ' + (s.cwd || '')).toLowerCase().includes(this.q)));
-        if (!list.length) { out.append(h('div', { class: 'empty' }, this.all ? (this.source === 'reva' ? 'No saved Reva chats yet — they appear here as you chat' : 'No chats found') : 'Nothing to show')); return; }
+        if (!list.length) { out.append(h('div', { class: 'empty' }, this.all ? (this.source === 'reva' ? 'No saved hyper-ide chats yet — they appear here as you chat' : 'No chats found') : 'Nothing to show')); return; }
         const groups = new Map();
         for (const s of list) { const k = this.group === 'provider' ? s.provider : this.group === 'project' ? (s.cwd ? basename(s.cwd) : 'No project') : dayLabel(s.updatedAt); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(s); }
         const order = this.group === 'provider' ? PROV_IDS.filter((p) => groups.has(p)) : [...groups.keys()];
@@ -208,7 +208,7 @@
       const groupBtn = h('button', { class: 'icon-btn', title: 'Group by agent / project / date', html: icon('list'), onclick: (e) => Combo.open(e.currentTarget, { title: 'Group by', width: 200, value: this.group, items: [{ value: 'provider', label: 'Agent' }, { value: 'project', label: 'Project' }, { value: 'date', label: 'Date' }], onPick: (v) => { this.group = v; this.collapsed.clear(); draw(); } }) });
       drawSrc(); drawChips(); if (this.all) draw(); else load();
       return [h('div', { class: 'panel-head' }, h('span', null, 'Chats'), h('div', { class: 'acts' }, groupBtn,
-        h('button', { class: 'icon-btn', title: 'Open Reva’s chat folder', html: icon('folder'), onclick: async () => api.fs.reveal(await api.chats.dir()) }),
+        h('button', { class: 'icon-btn', title: 'Open hyper-ide’s chat folder', html: icon('folder'), onclick: async () => api.fs.reveal(await api.chats.dir()) }),
         h('button', { class: 'icon-btn', title: 'New chat', html: icon('plus'), onclick: () => Chat.new() }), h('button', { class: 'icon-btn', title: 'Refresh', html: icon('refresh'), onclick: () => load(true) }))),
         h('div', { class: 'sbox' }, search), h('div', { class: 'sbox tight' }, src), chips, out];
     },

@@ -1,19 +1,19 @@
 {
-  "name": "reva",
-  "productName": "Reva",
+  "name": "hyper-ide",
+  "productName": "hyper-ide",
   "version": "0.9.0",
-  "description": "Reva - a desktop IDE for CLI coding agents (Claude Code, Codex, OpenCode and custom agents) with an editor, real terminal, browser preview and local voice input.",
-  "author": "Reva contributors",
+  "description": "hyper-ide - a desktop IDE for CLI coding agents (Claude Code, Codex, OpenCode and custom agents) with an editor, real terminal, browser preview and local voice input.",
+  "author": "hyper-ide contributors",
   "license": "MIT",
   "private": true,
   "main": "src/main.js",
-  "homepage": "https://github.com/YOUR_USER/reva#readme",
+  "homepage": "https://github.com/luc1anl1and/ide#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_USER/reva.git"
+    "url": "git+https://github.com/luc1anl1and/ide.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USER/reva/issues"
+    "url": "https://github.com/luc1anl1and/ide/issues"
   },
   "keywords": [
     "ide",
@@ -58,9 +58,9 @@
     "electron-builder": "^26.15.3"
   },
   "build": {
-    "appId": "com.reva.ide",
-    "productName": "Reva",
-    "copyright": "Copyright (c) 2026 Reva contributors",
+    "appId": "com.hyperide.ide",
+    "productName": "hyper-ide",
+    "copyright": "Copyright (c) 2026 hyper-ide contributors",
     "directories": {
       "output": "release",
       "buildResources": "build"
@@ -100,7 +100,7 @@
         { "target": "zip", "arch": ["x64"] }
       ],
       "signAndEditExecutable": true,
-      "artifactName": "Reva-${version}-portable.${ext}"
+      "artifactName": "hyper-${version}-portable.${ext}"
     }
 
   }
